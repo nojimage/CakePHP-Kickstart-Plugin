@@ -1,0 +1,11 @@
+exec:
+  - chmod -R o+w {$APP}/tmp/
+
+get_simpletest:
+  target: vendors
+
+git_submodule:
+    repo: -f http://github.com/cakephp/debug_kit.git
+    target: plugins/debug_kit
+
+bake: db_config

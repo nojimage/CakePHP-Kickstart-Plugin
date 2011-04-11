@@ -1,0 +1,4 @@
+exec:
+  - ls -l
+include:
+  - kickstart.test2

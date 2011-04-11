@@ -1,0 +1,87 @@
+h1. CakePHP Kickstart plugin
+
+PHP 5.2+, CakePHP 1.3+
+
+This plugin provides Kickstart shell command.
+
+Copyright 2011, php-tips.com (http://php-tips.com)
+
+h2. Plugin Instration
+
+<pre>
+git submodule add -f https://github.com/nojimage/CakePHP-Kickstart-Plugin plguins/kickstart
+</pre>
+
+h2. Usage
+
+<pre>
+cake/console/cake kickstart <config1> <config2>
+</pre>
+
+or
+
+<pre>
+cake/console/cake kickstart run <config1> <config2>
+</pre>
+
+or readonly config files
+
+<pre>
+cake/console/cake kickstart read <config1> <config2>
+</pre>
+
+if you want skip all questions.
+
+<pre>
+cake/console/cake kickstart -y <config1> <config2>
+</pre>
+
+h2. Default kickstart script (kickstart.yml)
+
+<pre>
+exec:
+  - chmod -R o+w {$APP}/tmp/
+
+get_simpletest:
+  target: vendors
+
+git_submodule:
+    repo: -f http://github.com/cakephp/debug_kit.git
+    target: plugins/debug_kit
+
+bake: db_config
+</pre>
+
+* set writable APP/tmp
+* install SimpleTest
+* install DebugKit
+* call "bake db_config"
+
+h2. kickstart.sh
+
+"kickstart.sh" is simple bash script. this script help the creation of the cakephp project.
+
+h3. kickstart.sh Instration
+
+<pre>
+cp kickstart.sh {YOUR_WORKSPACE}
+</pre>
+
+h3. Usage
+
+<pre>
+./kickstart.sh someproject_name init
+</pre>
+
+
+h2. LISENCE
+
+Licensed under The MIT License. Redistributions of files must retain the above copyright notice.
+
+Copyright 2011, php-tips.com (http://php-tips.com)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.

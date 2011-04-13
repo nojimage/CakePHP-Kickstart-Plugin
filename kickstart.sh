@@ -30,6 +30,7 @@ COMMAND=$2
 PROJECT_DIR=$(pwd)/${PROJECT}
 TMP_DIR=/tmp/cakeproject/${PROJECT}
 CAKEPHP_URL="https://github.com/cakephp/cakephp.git"
+KICKSTART_PLUGIN_URL="https://github.com/nojimage/CakePHP-Kickstart-Plugin.git"
 
 # Functions
 function prepare_tmp_dir {
@@ -70,7 +71,7 @@ case $COMMAND in
         git add . ; git add -f app/tmp; git add -f  app/config;
         git commit -m 'first commit'
         # add kickstart plugin
-        git submodule add -f https://github.com/nojimage/CakePHP-Kickstart-Plugin.git plugins/kickstart
+        git submodule add -f ${KICKSTART_PLUGIN_URL} plugins/kickstart
         git commit -m 'add Kickstart Plugin'
         echo ""
         echo "CakePHP initialization successs. Next run:"

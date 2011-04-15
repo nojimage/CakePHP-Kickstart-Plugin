@@ -1,11 +1,23 @@
-exec:
-  - chmod -R o+w {$APP}/tmp/
+##
+# Kickstart CakePHP Project
+##
 
-get_simpletest:
-  target: vendors
+# bake new project
+#- exec: rm -r app
+#- bake: project app -app . -skel /path_to/skel/
 
-git_submodule:
+# bake database.php
+- bake: db_config
+
+# set writable APP/tmp
+- exec:
+    - chmod -R o+w {$APP}/tmp/
+
+# install SimpleTest
+- get_simpletest:
+    target: vendors
+
+# install DebugKit
+- git_submodule:
     repo: -f http://github.com/cakephp/debug_kit.git
     target: plugins/debug_kit
-
-bake: db_config

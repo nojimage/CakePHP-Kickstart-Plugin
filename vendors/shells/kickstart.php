@@ -178,6 +178,8 @@ class KickstartShell extends Shell {
                     $val = array($val);
                 }
                 array_walk($val, array($this, '_loadSteps'));
+            } else if (is_int($key)) {
+                $this->steps[] = $val;
             } else {
                 $this->steps[] = array($key => $val);
             }

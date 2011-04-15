@@ -61,7 +61,8 @@ class KickstartShellTestCase extends CakeTestCase {
         $this->Shell->read();
         $this->assertIdentical($this->Shell->steps, array(
             array('exec' => array('ls -l')),
-            array('exec' => array('pwd')),
+            array('exec' => 'pwd'),
+            array('exec' => 'date'),
         ));
     }
 
@@ -75,10 +76,15 @@ class KickstartShellTestCase extends CakeTestCase {
         $this->Shell->setReturnValueAt(0, 'in', 'y');
         $this->Shell->expectAt(0, '__exec', array('ls -l'));
         //
-        $this->Shell->expectAt(1, 'out', array("---\nexec: \n  - pwd\n"));
+        $this->Shell->expectAt(1, 'out', array("---\nexec: pwd\n"));
         $this->Shell->expectAt(1, 'in', array('run this command?', array('y', 'N'), 'N'));
         $this->Shell->setReturnValueAt(1, 'in', 'y');
         $this->Shell->expectAt(1, '__exec', array('pwd'));
+        //
+        $this->Shell->expectAt(2, 'out', array("---\nexec: date\n"));
+        $this->Shell->expectAt(2, 'in', array('run this command?', array('y', 'N'), 'N'));
+        $this->Shell->setReturnValueAt(2, 'in', 'y');
+        $this->Shell->expectAt(2, '__exec', array('date'));
 
         $this->Shell->run();
     }

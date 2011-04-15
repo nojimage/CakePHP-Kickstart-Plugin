@@ -1,3 +1,4 @@
-exec:
-  - pwd
+- exec: pwd
+- exec: date
+---
 include: test

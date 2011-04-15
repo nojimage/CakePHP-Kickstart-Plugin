@@ -244,7 +244,7 @@ class KickstartShell extends Shell {
      * @param string $command
      */
     protected function _bake($command) {
-        $this->__exec('php ' . CAKE . 'console/cake.php bake ' . $command . ' -app ' . $this->params['app']);
+        $this->__exec('php ' . CAKE . 'console/cake.php bake ' . $command);
     }
 
     /**

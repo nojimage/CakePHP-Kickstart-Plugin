@@ -28,12 +28,16 @@
  */
 App::import('Vendor', 'Kickstart.Spyc', false);
 
+/**
+ *
+ * @property KickstartCommand $KickstartCommand
+ */
 class KickstartShell extends Shell {
 
     public $uses = array();
+    public $tasks = array('KickstartCommand');
     public $steps = array();
     protected $_loaded = array();
-    protected $_constants = array();
     protected $_pwd = '';
 
     /**
@@ -42,13 +46,6 @@ class KickstartShell extends Shell {
     public function startup() {
 
         parent::startup();
-
-        // get constants
-        $constants = get_defined_constants(true);
-        $this->_constants = $constants['user'];
-        // overrride params
-        $this->_constants['ROOT'] = isset($this->params['root']) ? $this->params['root'] : $this->_constants['ROOT'];
-        $this->_constants['APP'] = isset($this->params['working']) ? $this->params['working'] : $this->_constants['APP'];
 
         if (!empty($this->params['y']) && !is_bool($this->params['y'])) {
             array_unshift($this->args, $this->params['y']);
@@ -104,17 +101,20 @@ class KickstartShell extends Shell {
 
         // execute steps
         foreach ($this->steps as $step) {
-            if (!method_exists($this, '_' . key($step))) {
+
+            if (!method_exists($this->KickstartCommand, key($step))) {
                 continue;
             }
+
             $this->out(Spyc::YAMLDump($step, true));
+
             if (strtolower($this->in(__d('kickstart', 'run this command?', true), array('y', 'N'), 'N')) === 'y'
                     || !$this->interactive) {
 
                 $this->_pwd = getcwd();
                 chdir(ROOT);
 
-                call_user_func(array($this, '_' . key($step)), current($step));
+                call_user_func(array($this->KickstartCommand, key($step)), current($step));
 
                 chdir($this->_pwd);
             }
@@ -184,110 +184,6 @@ class KickstartShell extends Shell {
                 $this->steps[] = array($key => $val);
             }
         }
-    }
-
-    /**
-     * parse path string
-     *
-     * @param string $pathString
-     * @return string
-     */
-    protected function _parsePath($pathString) {
-        $pathString = preg_replace_callback('/\$([a-z0-9_]+)|{\$([a-z0-9_]+)}|\${([a-z0-9_]+)}/i', array($this, '_variableReplace'), $pathString);
-        return str_replace(DS . DS, DS, $pathString);
-    }
-
-    /**
-     * @param array $var
-     * @return string
-     */
-    protected function _variableReplace($var) {
-        return @$this->_constants[array_pop($var)];
-    }
-
-    // =========================================================================
-    /**
-     *
-     * @param array $commands
-     */
-    protected function _exec($commands) {
-        if (!is_array($commands)) {
-            $commands = array($commands);
-        }
-        foreach ($commands as $cmd) {
-            $this->__exec($cmd);
-        }
-    }
-
-    /**
-     * exec command
-     *
-     * @param string $command
-     * @return array
-     */
-    protected function __exec($command) {
-        passthru($this->_parsePath($command));
-    }
-
-    /**
-     * change dir
-     *
-     * @param string $dir
-     */
-    protected function _chdir($dir) {
-        chdir($this->_parsePath($dir));
-    }
-
-    /**
-     * cake bake
-     *
-     * @param string $command
-     */
-    protected function _bake($command) {
-        $this->__exec('php ' . CAKE . 'console/cake.php bake ' . $command);
-    }
-
-    /**
-     * get simpletest files
-     *
-     * @param array $params
-     */
-    protected function _get_simpletest($params) {
-        if (isset($params['target'])) {
-            $params['target'] = $this->shortPath($this->_parsePath($params['target']));
-        } else {
-            $params['target'] = 'vendors';
-        }
-        $params['target'] = rtrim($params['target'], DS) . DS;
-
-        $this->_chdir(ROOT . DS . $params['target']);
-
-        $path = 'sourceforge.net/projects/simpletest/files/simpletest/simpletest_1.0.1/simpletest_1.0.1.tar.gz/download';
-
-        $command = sprintf('curl -L %s | tar xz', $path);
-        $this->__exec($command);
-    }
-
-    /**
-     * git submodule add
-     *
-     * @param array $params
-     */
-    protected function _git_submodule($params) {
-        if (!isset($params['repo']) || !isset($params['target'])) {
-            $this->err(__d('kickstart', '\'git_submodule\' need \'repo\' and \'target\' options.', true));
-            return;
-        }
-
-        $params['target'] = $this->shortPath($this->_parsePath($params['target']));
-        if (file_exists($params['target'])
-                && !$this->in(
-                        sprintf(__d('kickstart', '%s is exists. are you sure overwrite?', true), $params['target']),
-                        array('y', 'N'), 'N') === 'y') {
-            return;
-        }
-        $command = sprintf('git submodule add %s %s', $params['repo'], $params['target']);
-        $this->__exec($command);
     }
 
 }

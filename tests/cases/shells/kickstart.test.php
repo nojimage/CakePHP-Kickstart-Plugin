@@ -18,6 +18,17 @@ Mock::generatePartial(
                 array('getInput', 'stdout', 'stderr', '_stop', '_initEnvironment', 'dispatch')
 );
 
+require_once dirname(dirname(dirname(dirname(__FILE__)))) . DS . 'vendors' . DS . 'shells' . DS . 'tasks' . DS . 'kickstart_command.php';
+
+class TestKickstartShellKickstartCommondTask extends KickstartCommandTask {
+
+}
+
+Mock::generatePartial(
+                'TestKickstartShellKickstartCommondTask', 'MockKickstartShellKickstartCommondTask',
+                array('in', 'out', 'hr', 'createFile', 'error', 'err', '_exec', '_chdir')
+);
+
 class TestKickstartShell extends KickstartShell {
 
     public function parsePath($pathString) {
@@ -45,6 +56,7 @@ class KickstartShellTestCase extends CakeTestCase {
         $this->Shell->params['working'] = APP;
         $this->Shell->args = array('kickstart.test');
         $this->Shell->Dispatch = $this->Dispatcher;
+        $this->Shell->KickstartCommand = new MockKickstartShellKickstartCommondTask();
     }
 
     public function endTest($method) {
@@ -74,30 +86,19 @@ class KickstartShellTestCase extends CakeTestCase {
         $this->Shell->expectAt(0, 'out', array("---\nexec: \n  - ls -l\n"));
         $this->Shell->expectAt(0, 'in', array('run this command?', array('y', 'N'), 'N'));
         $this->Shell->setReturnValueAt(0, 'in', 'y');
-        $this->Shell->expectAt(0, '__exec', array('ls -l'));
+        $this->Shell->KickstartCommand->expectAt(0, '_exec', array('ls -l'));
         //
         $this->Shell->expectAt(1, 'out', array("---\nexec: pwd\n"));
         $this->Shell->expectAt(1, 'in', array('run this command?', array('y', 'N'), 'N'));
         $this->Shell->setReturnValueAt(1, 'in', 'y');
-        $this->Shell->expectAt(1, '__exec', array('pwd'));
+        $this->Shell->KickstartCommand->expectAt(1, '_exec', array('pwd'));
         //
         $this->Shell->expectAt(2, 'out', array("---\nexec: date\n"));
         $this->Shell->expectAt(2, 'in', array('run this command?', array('y', 'N'), 'N'));
         $this->Shell->setReturnValueAt(2, 'in', 'y');
-        $this->Shell->expectAt(2, '__exec', array('date'));
+        $this->Shell->KickstartCommand->expectAt(2, '_exec', array('date'));
 
         $this->Shell->run();
-    }
-
-    // =========================================================================
-
-    public function test_parsePath() {
-        $this->Shell->startup();
-        $this->assertIdentical($this->Shell->parsePath('$ROOT/app/webroot'), ROOT . '/app/webroot', 'replace ROOT: %s');
-        $this->assertIdentical($this->Shell->parsePath('ROOT/app/webroot'), 'ROOT/app/webroot', 'not replaced ROOT: %s');
-        $this->assertIdentical($this->Shell->parsePath('{$APP}/webroot'), APP . 'webroot', 'replace APP: %s');
-        $this->assertIdentical($this->Shell->parsePath('APP/webroot'), 'APP/webroot', 'not replaced APP: %s');
-        $this->assertIdentical($this->Shell->parsePath('${CONFIGS}'), APP . 'config/', 'replaced CONFIGS: %s');
     }
 
 }

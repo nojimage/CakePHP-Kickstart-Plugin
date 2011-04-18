@@ -18,6 +18,15 @@ Mock::generatePartial(
                 array('getInput', 'stdout', 'stderr', '_stop', '_initEnvironment', 'dispatch')
 );
 
+//
+require_once CONSOLE_LIBS . 'tasks' . DS . 'template.php';
+
+Mock::generatePartial(
+                'TemplateTask', 'MockKickstartCommandTemplateTask',
+                array('in', 'out', 'hr', 'createFile', 'error', 'err', 'generate')
+);
+
+//
 require_once dirname(dirname(dirname(dirname(__FILE__)))) . DS . 'vendors' . DS . 'shells' . DS . 'tasks' . DS . 'kickstart_command.php';
 
 class TestKickstartCommond extends KickstartCommandTask {
@@ -45,6 +54,7 @@ class KickstartCommondTaskTestCase extends CakeTestCase {
         $this->Shell->params['app'] = APP_DIR;
         $this->Shell->params['working'] = APP;
         $this->Shell->Dispatch = $this->Dispatcher;
+        $this->Shell->Template = new MockKickstartCommandTemplateTask($this->Dispatcher);
     }
 
     public function endTest($method) {
@@ -109,6 +119,39 @@ class KickstartCommondTaskTestCase extends CakeTestCase {
         $this->Shell->git_submodule(array(
             'repo' => 'repo',
             'target' => '{$APP}/plugins'
+        ));
+    }
+
+    // =========================================================================
+    public function test_generatefile() {
+
+        $this->Shell->expectAt(0, 'in', array('please input "arg2"', null, null));
+        $this->Shell->setReturnValueAt(0, 'in', 'value2');
+        $this->Shell->expectAt(1, 'in', array('arg3 message.', array('value1', 'value2', 'value3'), 'value1'));
+        $this->Shell->setReturnValueAt(1, 'in', 'value3');
+
+        $this->Shell->Template->expectOnce('generate', array('generatefiles', 'config/core.php', array(
+                'arg1' => 'value1',
+                'arg2' => 'value2',
+                'arg3' => 'value3',
+                )));
+        $this->Shell->Template->setReturnValueAt(0, 'generate', 'template result');
+        $this->Shell->expectOnce('createFile', array(APP . 'config/core.php', 'template result'));
+
+        $this->Shell->generatefile(array(
+            'template' => 'config/core.php',
+            'target' => '$APP/config/core.php',
+            'vars' => array(
+                'arg1' => 'value1',
+            ),
+            'ask' => array(
+                'arg2' => true,
+                'arg3' => array(
+                    'message' => 'arg3 message.',
+                    'options' => array('value1', 'value2', 'value3'),
+                    'default' => 'value1',
+                ),
+            ),
         ));
     }
 

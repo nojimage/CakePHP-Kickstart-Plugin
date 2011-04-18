@@ -1,0 +1,27 @@
+##
+# generate core.php
+##
+generatefile:
+  template: config/core.php
+  target:   $APP/config/core.php
+  # vars
+  vars:
+    timezone: Asia/Tokyo       # date_default_timezone_set
+    debug:    0                # CakePHP Debug Level
+    log:      true             # CakePHP Log Level
+    encoding: UTF-8           # App.encoding
+    routing_prefix:            # Routing.prefixes
+      - admin
+    cache_check: 0             # Cache.check
+    security_level: high       # Security.level
+  # input vars
+  ask:
+    session_cookie:  # Session.cookie
+      message: "The name of CakePHP's session cookie"
+      default: CakePHP
+    salt:            # Security.salt
+      message: "Security.salt"
+      default: auto
+    cipherseed:      # Security.cipherSeed
+      message: "Security.cipherSeed"
+      default: auto

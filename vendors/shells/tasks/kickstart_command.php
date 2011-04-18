@@ -183,6 +183,7 @@ class KickstartCommandTask extends Shell {
         }
 
         $params['target'] = $this->shortPath($this->_parsePath($params['target']));
+        $params['target'] = trim($params['target'], DS);
 
         $vars = array();
 

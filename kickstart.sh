@@ -76,7 +76,7 @@ case $COMMAND in
         echo ""
         echo "CakePHP initialization successs. Next run:"
         echo ""
-        echo " cake/console/cake kickstart"
+        echo " cd ${PROJECT}; cake/console/cake kickstart"
         echo ""
 		;;
 

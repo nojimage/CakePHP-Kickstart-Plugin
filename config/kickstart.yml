@@ -2,17 +2,6 @@
 # Kickstart CakePHP Project
 ##
 
-# bake new project
-#- exec: rm -r app
-#- bake: project app -app . -skel /path_to/skel/
-
-# bake database.php
-- bake: db_config
-
-# set writable APP/tmp
-- exec:
-    - chmod -R o+w {$APP}/tmp/
-
 # install SimpleTest
 - get_simpletest:
     target: vendors
@@ -21,3 +10,23 @@
 - git_submodule:
     repo: -f http://github.com/cakephp/debug_kit.git
     target: plugins/debug_kit
+
+##
+## (using application skelton sample)
+##
+## install CakePHP skel
+#- git_submodule:
+#    repo: -f http://github.com/nojimage/CakePHP-skel.git
+#    target: plugins/skel
+#
+## bake new project
+#- exec: rm -r {$APP_DIR}
+#- bake: project {$APP_DIR} -app . -skel plugins/skel/basic
+#
+
+# set writable APP/tmp
+- exec:
+    - chmod -R o+w {$APP}/tmp/
+
+# bake database.php
+- bake: db_config

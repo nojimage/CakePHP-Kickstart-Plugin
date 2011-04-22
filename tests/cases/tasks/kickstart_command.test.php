@@ -73,6 +73,12 @@ class KickstartCommondTaskTestCase extends CakeTestCase {
         $this->assertIdentical($this->Shell->parsePath('${CONFIGS}'), APP . 'config/', 'replaced CONFIGS: %s');
     }
 
+    public function test_parsePath_uri() {
+         $this->assertIdentical($this->Shell->parsePath('https://github.com/cakephp/debug_kit.git'), 'https://github.com/cakephp/debug_kit.git');
+         $this->assertIdentical($this->Shell->parsePath('git://github.com/cakephp/debug_kit.git'), 'git://github.com/cakephp/debug_kit.git');
+         $this->assertIdentical($this->Shell->parsePath('/path_to/any//file'), '/path_to/any/file');
+    }
+
     // =========================================================================
 
     public function test_exec() {

@@ -35,7 +35,8 @@ class KickstartCommandTask extends Shell {
      */
     protected function _parsePath($pathString) {
         $pathString = preg_replace_callback('/\$([a-z0-9_]+)|{\$([a-z0-9_]+)}|\${([a-z0-9_]+)}/i', array($this, '_variableReplace'), $pathString);
-        return str_replace(DS . DS, DS, $pathString);
+        $pathString = preg_replace('/(?<!:)' . preg_quote(DS . DS, '/') . '/', DS, $pathString);
+        return $pathString;
     }
 
     /**

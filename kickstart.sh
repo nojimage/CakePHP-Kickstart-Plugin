@@ -16,7 +16,7 @@ function print_usage {
 	echo ""
 	echo "Available commands are:"
 	echo " - init (fetch CakePHP from git. and install kickstart plugin.)"
-	echo " - update-cake (copies latest CakePHP core into project)"
+	echo " - cakeupdate (copies latest CakePHP core into project)"
 }
 
 if [ $# != 2 ]; then
@@ -80,10 +80,10 @@ case $COMMAND in
         echo ""
 		;;
 
-	update-cake)
+	cakeupdate)
 		echo ""
 		echo "Update CakePHP core"
-		./${0} fetch-cake
+		fetch_cake
 		rm -rf ${PROJECT_DIR}/cake
 		cp -r $TMP_DIR/cake ${PROJECT_DIR}/cake
 		rm -rf $TMP_DIR

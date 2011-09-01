@@ -67,7 +67,7 @@ class KickstartShellTestCase extends CakeTestCase {
 
     // =========================================================================
 
-    public function test_read() {
+    public function testRead() {
         $this->Shell->command = 'read';
         $this->Shell->expectOnce('out');
         $this->Shell->read();
@@ -80,7 +80,7 @@ class KickstartShellTestCase extends CakeTestCase {
 
     // =========================================================================
 
-    public function test_run() {
+    public function testRun() {
         $this->Shell->command = 'run';
         //
         $this->Shell->expectAt(0, 'out', array("---\nexec: \n  - ls -l\n"));

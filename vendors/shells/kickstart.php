@@ -146,17 +146,22 @@ class KickstartShell extends Shell {
         $plugin = $pluginPath = $found = false;
         list($plugin, $fileName) = pluginSplit($fileName);
 
-        if ($plugin) {
+        if (!empty($plugin)) {
             $pluginPath = App::pluginPath($plugin);
+        } else {
+            $pluginPath = App::pluginPath('kickstart');
         }
         $pos = strpos($fileName, '..');
 
         if ($pos === false) {
-            if ($pluginPath && file_exists($pluginPath . 'config' . DS . $fileName . '.yml')) {
+            if (!empty($plugin) && !empty($pluginPath) && file_exists($pluginPath . 'config' . DS . $fileName . '.yml')) {
                 $fileName = $pluginPath . 'config' . DS . $fileName . '.yml';
                 $found = true;
             } elseif (file_exists(CONFIGS . $fileName . '.yml')) {
                 $fileName = CONFIGS . $fileName . '.yml';
+                $found = true;
+            } elseif (!empty($pluginPath) && file_exists($pluginPath . 'config' . DS . $fileName . '.yml')) {
+                $fileName = $pluginPath . 'config' . DS . $fileName . '.yml';
                 $found = true;
             } elseif (file_exists(ROOT . $fileName . '.yml')) {
                 $fileName = ROOT . $fileName . '.yml';

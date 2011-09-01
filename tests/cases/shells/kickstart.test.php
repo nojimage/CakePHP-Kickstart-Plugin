@@ -14,19 +14,17 @@ if (!class_exists('ShellDispatcher')) {
 }
 
 Mock::generatePartial(
-                'ShellDispatcher', 'TestKickstartShellMockShellDispatcher',
-                array('getInput', 'stdout', 'stderr', '_stop', '_initEnvironment', 'dispatch')
+        'ShellDispatcher', 'TestKickstartShellMockShellDispatcher', array('getInput', 'stdout', 'stderr', '_stop', '_initEnvironment', 'dispatch')
 );
 
 require_once dirname(dirname(dirname(dirname(__FILE__)))) . DS . 'vendors' . DS . 'shells' . DS . 'tasks' . DS . 'kickstart_command.php';
 
 class TestKickstartShellKickstartCommondTask extends KickstartCommandTask {
-
+    
 }
 
 Mock::generatePartial(
-                'TestKickstartShellKickstartCommondTask', 'MockKickstartShellKickstartCommondTask',
-                array('in', 'out', 'hr', 'createFile', 'error', 'err', '_exec', '_chdir')
+        'TestKickstartShellKickstartCommondTask', 'MockKickstartShellKickstartCommondTask', array('in', 'out', 'hr', 'createFile', 'error', 'err', '_exec', '_chdir')
 );
 
 class TestKickstartShell extends KickstartShell {
@@ -38,8 +36,7 @@ class TestKickstartShell extends KickstartShell {
 }
 
 Mock::generatePartial(
-                'TestKickstartShell', 'MockKickstartShell',
-                array('in', 'out', 'hr', 'createFile', 'error', 'err', '__exec')
+        'TestKickstartShell', 'MockKickstartShell', array('in', 'out', 'hr', 'createFile', 'error', 'err', '__exec')
 );
 
 /**
@@ -69,6 +66,18 @@ class KickstartShellTestCase extends CakeTestCase {
 
     public function testRead() {
         $this->Shell->command = 'read';
+        $this->Shell->expectOnce('out');
+        $this->Shell->read();
+        $this->assertIdentical($this->Shell->steps, array(
+            array('exec' => array('ls -l')),
+            array('exec' => 'pwd'),
+            array('exec' => 'date'),
+        ));
+    }
+
+    public function testRead_plugin_failback() {
+        $this->Shell->command = 'read';
+        $this->Shell->args = array('test');
         $this->Shell->expectOnce('out');
         $this->Shell->read();
         $this->assertIdentical($this->Shell->steps, array(

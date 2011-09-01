@@ -9,10 +9,22 @@
 set -o nounset
 set -o errexit
 
+CAKEPHP_URL="https://github.com/cakephp/cakephp.git"
+CAKEPHP_BRANCH=master
+KICKSTART_PLUGIN_URL="https://github.com/nojimage/CakePHP-Kickstart-Plugin.git"
+
+# get options
+while getopts b: OPT
+do
+  case $OPT in
+    "b" ) CAKEPHP_BRANCH="$OPTARG"; shift `expr $OPTIND - 1` ;;
+  esac
+done
+
 # help print
 function print_usage {
 	echo ""
-	echo "$0 <project_name> <command>"
+	echo "$0 [-b <cakephp_branch>] <project_name> <command>"
 	echo ""
 	echo "Available commands are:"
 	echo " - init (fetch CakePHP from git. and install kickstart plugin.)"
@@ -29,8 +41,6 @@ PROJECT=$1
 COMMAND=$2
 PROJECT_DIR=$(pwd)/${PROJECT}
 TMP_DIR=/tmp/cakeproject/${PROJECT}
-CAKEPHP_URL="https://github.com/cakephp/cakephp.git"
-KICKSTART_PLUGIN_URL="https://github.com/nojimage/CakePHP-Kickstart-Plugin.git"
 
 # Functions
 function prepare_tmp_dir {
@@ -46,7 +56,7 @@ function fetch_cake {
     cd $TMP_DIR
     git init
     git remote add origin ${CAKEPHP_URL}
-    git pull origin master
+    git pull origin ${CAKEPHP_BRANCH}
     echo ""
     cat cake/VERSION.txt
     echo ""

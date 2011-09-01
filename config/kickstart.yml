@@ -15,14 +15,13 @@
 ## (using application skelton sample)
 ##
 ## install CakePHP skel
-#- git_submodule:
-#    repo: -f http://github.com/nojimage/CakePHP-skel.git
-#    target: plugins/skel
-#
+- git_submodule:
+    repo: -f http://github.com/nojimage/CakePHP-skel.git
+    target: plugins/skel
+
 ## bake new project
-#- exec: rm -r {$APP_DIR}
-#- bake: project {$APP_DIR} -app . -skel plugins/skel/basic
-#
+- exec: rm -r {$APP_DIR}
+- bake: project {$APP_DIR} -app . -skel plugins/skel/basic
 
 # set writable APP/tmp
 - exec:

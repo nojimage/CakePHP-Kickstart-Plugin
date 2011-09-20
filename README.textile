@@ -6,7 +6,7 @@ This plugin provides Kickstart shell command.
 
 Copyright 2011, php-tips.com (http://php-tips.com)
 
-h2. Plugin Instration
+h2. Plugin Installation
 
 <pre>
 git submodule add -f https://github.com/nojimage/CakePHP-Kickstart-Plugin plguins/kickstart
@@ -61,7 +61,7 @@ h2. kickstart.sh
 
 "kickstart.sh" is simple bash script. this script help the creation of the cakephp project.
 
-h3. kickstart.sh Instration
+h3. kickstart.sh Installation
 
 <pre>
 cp kickstart.sh {YOUR_WORKSPACE}

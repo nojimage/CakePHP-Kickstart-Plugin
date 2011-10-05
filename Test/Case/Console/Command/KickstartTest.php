@@ -1,6 +1,8 @@
 <?php
 
-App::import('Shell', array('Shell', 'Kickstart.Kickstart'));
+
+App::uses('Shell', 'Console');
+App::uses('KickstartShell', 'Kickstart.Console/Command');
 
 if (!defined('DISABLE_AUTO_DISPATCH')) {
     define('DISABLE_AUTO_DISPATCH', true);

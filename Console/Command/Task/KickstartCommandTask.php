@@ -18,6 +18,7 @@
  * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
  * @link    　http://php-tips.com/
  */
+App::uses('Shell', 'Console');
 
 /**
  *
@@ -33,7 +34,7 @@ class KickstartCommandTask extends Shell {
      * @param string $pathString
      * @return string
      */
-    protected function _parsePath($pathString) {
+    public function parsePath($pathString) {
         $pathString = preg_replace_callback('/\$([a-z0-9_]+)|{\$([a-z0-9_]+)}|\${([a-z0-9_]+)}/i', array($this, '_variableReplace'), $pathString);
         $pathString = preg_replace('/(?<!:)' . preg_quote(DS . DS, '/') . '/', DS, $pathString);
         return $pathString;
@@ -62,7 +63,7 @@ class KickstartCommandTask extends Shell {
      * @return array
      */
     protected function _exec($command) {
-        passthru($this->_parsePath($command));
+        passthru($this->parsePath($command));
     }
 
     /**
@@ -71,7 +72,7 @@ class KickstartCommandTask extends Shell {
      * @param string $dir
      */
     protected function _chdir($dir) {
-        chdir($this->_parsePath($dir));
+        chdir($this->parsePath($dir));
     }
 
     // =========================================================================
@@ -121,7 +122,7 @@ class KickstartCommandTask extends Shell {
         }
 
         if (isset($params['target'])) {
-            $params['target'] = $this->shortPath($this->_parsePath($params['target']));
+            $params['target'] = $this->shortPath($this->parsePath($params['target']));
         } else {
             $params = array();
             $params['target'] = 'vendors';
@@ -153,13 +154,12 @@ class KickstartCommandTask extends Shell {
             return;
         }
 
-        $params['target'] = $this->shortPath($this->_parsePath($params['target']));
+        $params['target'] = $this->shortPath($this->parsePath($params['target']));
         $params['target'] = trim($params['target'], DS);
 
         if (file_exists($params['target'])
                 && !$this->in(
-                        sprintf(__d('kickstart', '%s is exists. are you sure overwrite?', true), $params['target']),
-                        array('y', 'N'), 'N') === 'y') {
+                        sprintf(__d('kickstart', '%s is exists. are you sure overwrite?', true), $params['target']), array('y', 'N'), 'N') === 'y') {
             return;
         }
         $command = sprintf('git submodule add %s %s', $params['repo'], $params['target']);
@@ -183,7 +183,7 @@ class KickstartCommandTask extends Shell {
             return;
         }
 
-        $params['target'] = $this->shortPath($this->_parsePath($params['target']));
+        $params['target'] = $this->shortPath($this->parsePath($params['target']));
         $params['target'] = trim($params['target'], DS);
 
         $vars = array();

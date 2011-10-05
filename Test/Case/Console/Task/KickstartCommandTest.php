@@ -1,82 +1,64 @@
 <?php
 
-App::import('Shell', array('Shell'));
-
-if (!defined('DISABLE_AUTO_DISPATCH')) {
-    define('DISABLE_AUTO_DISPATCH', true);
-}
-
-if (!class_exists('ShellDispatcher')) {
-    ob_start();
-    $argv = false;
-    require CAKE . 'console' . DS . 'cake.php';
-    ob_end_clean();
-}
-
-Mock::generatePartial(
-                'ShellDispatcher', 'TestKickstartCommandMockShellDispatcher',
-                array('getInput', 'stdout', 'stderr', '_stop', '_initEnvironment', 'dispatch')
-);
-
-//
-require_once CONSOLE_LIBS . 'tasks' . DS . 'template.php';
-
-Mock::generatePartial(
-                'TemplateTask', 'MockKickstartCommandTemplateTask',
-                array('in', 'out', 'hr', 'createFile', 'error', 'err', 'generate')
-);
-
-//
-require_once dirname(dirname(dirname(dirname(__FILE__)))) . DS . 'vendors' . DS . 'shells' . DS . 'tasks' . DS . 'kickstart_command.php';
-
-class TestKickstartCommond extends KickstartCommandTask {
-
-    public function parsePath($pathString) {
-        return parent::_parsePath($pathString);
-    }
-
-}
-
-Mock::generatePartial(
-                'TestKickstartCommond', 'MockKickstartCommond',
-                array('in', 'out', 'hr', 'createFile', 'error', 'err', '_exec', '_chdir')
-);
+App::uses('ShellDispatcher', 'Console');
+App::uses('KickstartCommandTask', 'Kickstart.Console/Command/Task');
 
 /**
  *
- * @property KickstartCommondTask $Shell
+ * @property KickstartCommondTask $Task
  */
 class KickstartCommondTaskTestCase extends CakeTestCase {
 
-    public function startTest($method) {
-        $this->Dispatcher = new TestKickstartCommandMockShellDispatcher();
-        $this->Shell = new MockKickstartCommond($this->Dispatcher);
-        $this->Shell->params['app'] = APP_DIR;
-        $this->Shell->params['working'] = APP;
-        $this->Shell->Dispatch = $this->Dispatcher;
-        $this->Shell->Template = new MockKickstartCommandTemplateTask($this->Dispatcher);
+    /**
+     * setUp method
+     *
+     * @return void
+     */
+    public function setUp() {
+        parent::setUp();
+        $out = $this->getMock('ConsoleOutput', array(), array(), '', false);
+        $in = $this->getMock('ConsoleInput', array(), array(), '', false);
+
+        $methods = array('in', 'out', 'err', 'error', '_exec', '_chdir');
+        $this->Task = $this->getMock('KickstartCommandTask', $methods, array($out, $out, $in));
+
+        $this->Task->params['app'] = APP_DIR;
+        $this->Task->params['working'] = APP;
     }
 
-    public function endTest($method) {
-        unset($this->Shell);
-        unset($this->Dispatcher);
-        ClassRegistry::flush();
+    /**
+     * tearDown method
+     *
+     * @return void
+     */
+    public function tearDown() {
+        parent::tearDown();
+        unset($this->Task);
+        CakePlugin::unload();
     }
 
     // =========================================================================
 
-    public function test_parsePath() {
-        $this->assertIdentical($this->Shell->parsePath('$ROOT/app/webroot'), ROOT . '/app/webroot', 'replace ROOT: %s');
-        $this->assertIdentical($this->Shell->parsePath('ROOT/app/webroot'), 'ROOT/app/webroot', 'not replaced ROOT: %s');
-        $this->assertIdentical($this->Shell->parsePath('{$APP}/webroot'), APP . 'webroot', 'replace APP: %s');
-        $this->assertIdentical($this->Shell->parsePath('APP/webroot'), 'APP/webroot', 'not replaced APP: %s');
-        $this->assertIdentical($this->Shell->parsePath('${CONFIGS}'), APP . 'config/', 'replaced CONFIGS: %s');
+    public function testParsePath_replace_ROOT() {
+        $this->assertEquals(ROOT . '/app/webroot', $this->Task->parsePath('$ROOT/app/webroot'));
     }
 
-    public function test_parsePath_uri() {
-         $this->assertIdentical($this->Shell->parsePath('https://github.com/cakephp/debug_kit.git'), 'https://github.com/cakephp/debug_kit.git');
-         $this->assertIdentical($this->Shell->parsePath('git://github.com/cakephp/debug_kit.git'), 'git://github.com/cakephp/debug_kit.git');
-         $this->assertIdentical($this->Shell->parsePath('/path_to/any//file'), '/path_to/any/file');
+    public function testParsePath_not_replaced_ROOT() {
+        $this->assertEquals('ROOT/app/webroot', $this->Task->parsePath('ROOT/app/webroot'));
+    }
+
+    public function testParsePath_replaced_APP() {
+        $this->assertEquals(APP . 'webroot', $this->Task->parsePath('{$APP}/webroot'));
+    }
+
+    public function testParsePath_not_replaced_APP() {
+        $this->assertEquals('APP/webroot', $this->Task->parsePath('APP/webroot'));
+    }
+
+    public function testParsePath_uri() {
+        $this->assertEquals('https://github.com/cakephp/debug_kit.git', $this->Task->parsePath('https://github.com/cakephp/debug_kit.git'));
+        $this->assertEquals('git://github.com/cakephp/debug_kit.git', $this->Task->parsePath('git://github.com/cakephp/debug_kit.git'));
+        $this->assertEquals('/path_to/any/file', $this->Task->parsePath('/path_to/any//file'));
     }
 
     // =========================================================================

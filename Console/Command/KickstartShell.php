@@ -26,7 +26,7 @@
  *  cake kickstart
  *
  */
-App::import('Vendor', 'Kickstart.Spyc', false);
+App::uses('Spyc', 'Kickstart.Vendor');
 
 /**
  *

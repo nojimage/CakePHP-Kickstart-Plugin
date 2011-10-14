@@ -1,6 +1,6 @@
 <?php
 
-App::uses('ShellDispatcher', 'Console');
+App::uses('TemplateTask', 'Console/Command/Task');
 App::uses('KickstartCommandTask', 'Kickstart.Console/Command/Task');
 
 /**
@@ -19,8 +19,9 @@ class KickstartCommondTaskTestCase extends CakeTestCase {
         $out = $this->getMock('ConsoleOutput', array(), array(), '', false);
         $in = $this->getMock('ConsoleInput', array(), array(), '', false);
 
-        $methods = array('in', 'out', 'err', 'error', '_exec', '_chdir');
+        $methods = array('in', 'out', 'err', 'error', '_exec', '_chdir', 'createFile');
         $this->Task = $this->getMock('KickstartCommandTask', $methods, array($out, $out, $in));
+        $this->Task->Template = $this->getMock('TemplateTask', array('in', 'out', 'err', 'error', 'generate'), array($out, $out, $in));
 
         $this->Task->params['app'] = APP_DIR;
         $this->Task->params['working'] = APP;
@@ -63,70 +64,74 @@ class KickstartCommondTaskTestCase extends CakeTestCase {
 
     // =========================================================================
 
-    public function test_exec() {
-        $this->Shell->expectOnce('_exec', array('some command'));
-        $this->Shell->exec('some command');
+    public function testExec() {
+        $this->Task->expects($this->once())->method('_exec')->with('some command');
+        $this->Task->exec('some command');
     }
 
-    public function test_exec_array() {
-        $this->Shell->expectAt(0, '_exec', array('some command'));
-        $this->Shell->expectAt(1, '_exec', array('any command'));
-        $this->Shell->expectCallCount('_exec', 2);
-        $this->Shell->exec(array('some command', 'any command'));
-    }
-
-    // =========================================================================
-
-    public function test_bake() {
-        $this->Shell->expectOnce('_exec', array('php ' . CAKE . 'console/cake.php bake db_config -app ' . $this->Shell->params['app']));
-        $this->Shell->bake('db_config');
-    }
-
-    public function test_bake_with_app_params_override() {
-        $this->Shell->expectOnce('_exec', array('php ' . CAKE . 'console/cake.php bake db_config -app foobar'));
-        $this->Shell->bake('db_config -app foobar');
+    public function testExec_param_is_array() {
+        $this->Task->expects($this->at(0))->method('_exec')->with('some command');
+        $this->Task->expects($this->at(1))->method('_exec')->with('any command');
+        $this->Task->exec(array('some command', 'any command'));
     }
 
     // =========================================================================
 
-    public function test_get_simpletest() {
-        $this->Shell->expectOnce('_chdir', array(ROOT . DS . 'vendors' . DS));
-        $this->Shell->expectOnce('_exec', array('curl -L sourceforge.net/projects/simpletest/files/simpletest/simpletest_1.0.1/simpletest_1.0.1.tar.gz/download | tar xz'));
-        $this->Shell->get_simpletest(1);
+    public function testBake() {
+        $this->Task->expects($this->once())->method('_exec')->with('php ' . CAKE . 'console/cake.php bake db_config -app ' . $this->Task->params['app']);
+        $this->Task->bake('db_config');
     }
 
-    public function test_get_simpletest_with_target() {
-        $this->Shell->expectOnce('_chdir', array(APP . 'foobar' . DS));
-        $this->Shell->expectOnce('_exec', array('curl -L sourceforge.net/projects/simpletest/files/simpletest/simpletest_1.0.1/simpletest_1.0.1.tar.gz/download | tar xz'));
-        $this->Shell->get_simpletest(array('target' => '{$APP}/foobar'));
+    public function testBake_with_app_params_override() {
+        $this->Task->expects($this->once())->method('_exec')->with('php ' . CAKE . 'console/cake.php bake db_config -app foobar');
+        $this->Task->bake('db_config -app foobar');
     }
 
     // =========================================================================
-    public function test_git_submodule() {
-        $this->Shell->expectOnce('_exec', array('git submodule add repo app/plugins'));
-        $this->Shell->git_submodule(array(
+
+    public function testGetSimpletest() {
+        $this->Task->expects($this->once())->method('_chdir')->with(ROOT . DS . 'vendors' . DS);
+        $this->Task->expects($this->once())->method('_exec')->with('curl -L sourceforge.net/projects/simpletest/files/simpletest/simpletest_1.0.1/simpletest_1.0.1.tar.gz/download | tar xz');
+        $this->Task->get_simpletest(1);
+    }
+
+    public function testGetSimpletest_with_target() {
+        $this->Task->expects($this->once())->method('_chdir')->with(APP . 'foobar' . DS);
+        $this->Task->expects($this->once())->method('_exec')->with('curl -L sourceforge.net/projects/simpletest/files/simpletest/simpletest_1.0.1/simpletest_1.0.1.tar.gz/download | tar xz');
+        $this->Task->get_simpletest(array('target' => '{$APP}/foobar'));
+    }
+
+    // =========================================================================
+    public function testGitSubmodule() {
+        $this->Task->expects($this->once())->method('_exec')->with('git submodule add repo app/plugins');
+        $this->Task->git_submodule(array(
             'repo' => 'repo',
             'target' => '{$APP}/plugins'
         ));
     }
 
     // =========================================================================
-    public function test_generatefile() {
+    public function testGeneratefile() {
 
-        $this->Shell->expectAt(0, 'in', array('please input "arg2"', null, null));
-        $this->Shell->setReturnValueAt(0, 'in', 'value2');
-        $this->Shell->expectAt(1, 'in', array('arg3 message.', array('value1', 'value2', 'value3'), 'value1'));
-        $this->Shell->setReturnValueAt(1, 'in', 'value3');
+        $this->Task->expects($this->at(0))->method('in')
+                ->with('please input "arg2"', null, null)
+                ->will($this->returnCallback(array($this, 'returnInValue')));
 
-        $this->Shell->Template->expectOnce('generate', array('generatefiles', 'config/core.php', array(
-                'arg1' => 'value1',
-                'arg2' => 'value2',
-                'arg3' => 'value3',
-                )));
-        $this->Shell->Template->setReturnValueAt(0, 'generate', 'template result');
-        $this->Shell->expectOnce('createFile', array(APP . 'config/core.php', 'template result'));
+        $this->Task->expects($this->at(1))->method('in')
+                ->with('arg3 message.', array('value1', 'value2', 'value3'), 'value1')
+                ->will($this->returnCallback(array($this, 'returnInValue')));
 
-        $this->Shell->generatefile(array(
+        $this->Task->Template->expects($this->at(0))->method('generate')
+                ->with('generatefiles', 'config/core.php', array(
+                    'arg1' => 'value1',
+                    'arg2' => 'value2',
+                    'arg3' => 'value3',
+                ))
+                ->will($this->returnValue('template result'));
+
+        $this->Task->expects($this->once())->method('createFile')
+                ->with(APP . 'config/core.php', 'template result');
+        $this->Task->generatefile(array(
             'template' => 'config/core.php',
             'target' => '$APP/config/core.php',
             'vars' => array(
@@ -141,6 +146,14 @@ class KickstartCommondTaskTestCase extends CakeTestCase {
                 ),
             ),
         ));
+    }
+
+    public function returnInValue($params) {
+        if ($params === 'please input "arg2"') {
+            return 'value2';
+        }
+
+        return 'value3';
     }
 
 }

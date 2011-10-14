@@ -150,7 +150,7 @@ class KickstartCommandTask extends Shell {
         }
 
         if (!isset($params['repo']) || !isset($params['target'])) {
-            $this->err(__d('kickstart', '\'git_submodule\' need \'repo\' and \'target\' options.', true));
+            $this->err(__d('kickstart', '\'git_submodule\' need \'repo\' and \'target\' options.'));
             return;
         }
 
@@ -159,7 +159,7 @@ class KickstartCommandTask extends Shell {
 
         if (file_exists($params['target'])
                 && !$this->in(
-                        sprintf(__d('kickstart', '%s is exists. are you sure overwrite?', true), $params['target']), array('y', 'N'), 'N') === 'y') {
+                        sprintf(__d('kickstart', '%s is exists. are you sure overwrite?'), $params['target']), array('y', 'N'), 'N') === 'y') {
             return;
         }
         $command = sprintf('git submodule add %s %s', $params['repo'], $params['target']);
@@ -179,7 +179,7 @@ class KickstartCommandTask extends Shell {
         }
 
         if (!isset($params['template']) || !isset($params['target'])) {
-            $this->err(__d('kickstart', '\'generatefile\' need \'template\' and \'target\' options.', true));
+            $this->err(__d('kickstart', '\'generatefile\' need \'template\' and \'target\' options.'));
             return;
         }
 
@@ -198,7 +198,7 @@ class KickstartCommandTask extends Shell {
         $this->interactive = true;
         if (!empty($params['ask'])) {
             foreach ($params['ask'] as $key => $opt) {
-                $prompt = isset($opt['message']) ? $opt['message'] : sprintf(__d('kickstart', 'please input "%s"', true), $key);
+                $prompt = isset($opt['message']) ? $opt['message'] : sprintf(__d('kickstart', 'please input "%s"'), $key);
                 $options = isset($opt['options']) ? $opt['options'] : null;
                 $default = isset($opt['default']) ? $opt['default'] : null;
                 $vars[$key] = $this->in($prompt, $options, $default);

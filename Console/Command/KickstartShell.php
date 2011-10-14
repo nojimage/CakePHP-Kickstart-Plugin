@@ -127,7 +127,7 @@ class KickstartShell extends Shell {
      */
     public function read($output = true) {
         if (empty($this->args)) {
-            $this->args[0] = 'kickstart.kickstart';
+            $this->args[0] = 'Kickstart.kickstart';
         }
         foreach ($this->args as $config) {
             $this->_loadSteps($config);
@@ -149,19 +149,20 @@ class KickstartShell extends Shell {
         if (!empty($plugin)) {
             $pluginPath = App::pluginPath($plugin);
         } else {
-            $pluginPath = App::pluginPath('kickstart');
+            CakePlugin::load('Kickstart');
+            $pluginPath = App::pluginPath('Kickstart');
         }
         $pos = strpos($fileName, '..');
 
         if ($pos === false) {
-            if (!empty($plugin) && !empty($pluginPath) && file_exists($pluginPath . 'config' . DS . $fileName . '.yml')) {
-                $fileName = $pluginPath . 'config' . DS . $fileName . '.yml';
+            if (!empty($plugin) && !empty($pluginPath) && file_exists($pluginPath . 'Config' . DS . $fileName . '.yml')) {
+                $fileName = $pluginPath . 'Config' . DS . $fileName . '.yml';
                 $found = true;
-            } elseif (file_exists(CONFIGS . $fileName . '.yml')) {
-                $fileName = CONFIGS . $fileName . '.yml';
+            } elseif (file_exists(APP . 'Config' . DS . $fileName . '.yml')) {
+                $fileName = APP . 'Config' . DS . $fileName . '.yml';
                 $found = true;
-            } elseif (!empty($pluginPath) && file_exists($pluginPath . 'config' . DS . $fileName . '.yml')) {
-                $fileName = $pluginPath . 'config' . DS . $fileName . '.yml';
+            } elseif (!empty($pluginPath) && file_exists($pluginPath . 'Config' . DS . $fileName . '.yml')) {
+                $fileName = $pluginPath . 'Config' . DS . $fileName . '.yml';
                 $found = true;
             } elseif (file_exists(ROOT . $fileName . '.yml')) {
                 $fileName = ROOT . $fileName . '.yml';

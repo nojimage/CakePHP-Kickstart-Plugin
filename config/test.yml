@@ -1,4 +1,4 @@
 exec:
   - ls -l
 include:
-  - kickstart.test2
+  - Kickstart.test2

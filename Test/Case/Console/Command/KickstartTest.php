@@ -17,6 +17,8 @@ class KickstartShellTestCase extends CakeTestCase {
      */
     public function setUp() {
         parent::setUp();
+        CakePlugin::load('Kickstart');
+
         $out = $this->getMock('ConsoleOutput', array(), array(), '', false);
         $in = $this->getMock('ConsoleInput', array(), array(), '', false);
 
@@ -70,22 +72,35 @@ class KickstartShellTestCase extends CakeTestCase {
     public function testRun() {
         $this->Shell->command = 'run';
         //
-        $this->Shell->expectAt(0, 'out', array("---\nexec: \n  - ls -l\n"));
-        $this->Shell->expectAt(0, 'in', array('run this command?', array('y', 'N'), 'N'));
-        $this->Shell->setReturnValueAt(0, 'in', 'y');
-        $this->Shell->KickstartCommand->expectAt(0, '_exec', array('ls -l'));
+        $this->Shell->expects($this->at(0))->method('out')
+                ->with("---\nexec: \n  - ls -l\n");
+        $this->Shell->expects($this->at(1))->method('in')
+                ->with('run this command?', array('y', 'N'), 'N')
+                ->will($this->returnCallback(array($this, '_returnValueAtRun')));
+        $this->Shell->KickstartCommand->expects($this->at(0))->method('_exec')
+                ->with('ls -l');
         //
-        $this->Shell->expectAt(1, 'out', array("---\nexec: pwd\n"));
-        $this->Shell->expectAt(1, 'in', array('run this command?', array('y', 'N'), 'N'));
-        $this->Shell->setReturnValueAt(1, 'in', 'y');
-        $this->Shell->KickstartCommand->expectAt(1, '_exec', array('pwd'));
+        $this->Shell->expects($this->at(2))->method('out')
+                ->with("---\nexec: pwd\n");
+        $this->Shell->expects($this->at(3))->method('in')
+                ->with('run this command?', array('y', 'N'), 'N')
+                ->will($this->returnCallback(array($this, '_returnValueAtRun')));
+        $this->Shell->KickstartCommand->expects($this->at(1))->method('_exec')
+                ->with('pwd');
         //
-        $this->Shell->expectAt(2, 'out', array("---\nexec: date\n"));
-        $this->Shell->expectAt(2, 'in', array('run this command?', array('y', 'N'), 'N'));
-        $this->Shell->setReturnValueAt(2, 'in', 'y');
-        $this->Shell->KickstartCommand->expectAt(2, '_exec', array('date'));
+        $this->Shell->expects($this->at(4))->method('out')
+                ->with("---\nexec: date\n");
+        $this->Shell->expects($this->at(5))->method('in')
+                ->with('run this command?', array('y', 'N'), 'N')
+                ->will($this->returnCallback(array($this, '_returnValueAtRun')));
+        $this->Shell->KickstartCommand->expects($this->at(2))->method('_exec')
+                ->with('date'); //*/
 
         $this->Shell->run();
+    }
+
+    public function _returnValueAtRun($params) {
+        return 'y';
     }
 
 }

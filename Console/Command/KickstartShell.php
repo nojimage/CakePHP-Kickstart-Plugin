@@ -88,7 +88,7 @@ class KickstartShell extends Shell {
             $this->out($commands[strtolower($this->args[0])] . "\n\n");
         } else {
 
-            $this->out(sprintf(__("Command '%s' not found", true), $this->args[0]));
+            $this->out(sprintf(__d('kickstart', "Command '%s' not found"), $this->args[0]));
         }
     }
 
@@ -108,7 +108,7 @@ class KickstartShell extends Shell {
 
             $this->out(Spyc::YAMLDump($step, true));
 
-            if (strtolower($this->in(__d('kickstart', 'run this command?', true), array('y', 'N'), 'N')) === 'y'
+            if (strtolower($this->in(__d('kickstart', 'run this command?'), array('y', 'N'), 'N')) === 'y'
                     || !$this->interactive) {
 
                 $this->_pwd = getcwd();
@@ -149,7 +149,6 @@ class KickstartShell extends Shell {
         if (!empty($plugin)) {
             $pluginPath = App::pluginPath($plugin);
         } else {
-            CakePlugin::load('Kickstart');
             $pluginPath = App::pluginPath('Kickstart');
         }
         $pos = strpos($fileName, '..');

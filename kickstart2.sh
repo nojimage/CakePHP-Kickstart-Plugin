@@ -83,13 +83,17 @@ case $COMMAND in
         echo ""
         echo "CakePHP initialization successs."
         ## add kickstart plugin
-        #git submodule add -f -b 2.0 ${KICKSTART_PLUGIN_URL} plugins/kickstart
-        #git commit -m 'add Kickstart Plugin'
-        #echo ""
-        #echo "Next run:"
-        #echo ""
-        #echo " cd ${PROJECT}; lib/Cake/Console/cake kickstart"
-        #echo ""
+        git submodule add -f -b 2.0 ${KICKSTART_PLUGIN_URL} plugins/Kickstart
+        echo "" >> app/Config/bootstrap.php
+        echo "CakePlugin::load('Kickstart'); // load Kickstart Plugin" >> app/Config/bootstrap.php
+        echo "" >> app/Config/bootstrap.php
+        git au app/Config/bootstrap.php
+        git commit -m 'add Kickstart Plugin'
+        echo ""
+        echo "Next run:"
+        echo ""
+        echo " cd ${PROJECT}; app/Console/cake Kickstart.kickstart"
+        echo ""
 		;;
 
 	cakeupdate)

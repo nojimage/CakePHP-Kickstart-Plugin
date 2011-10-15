@@ -30,12 +30,12 @@ App::uses('Spyc', 'Kickstart.Vendor');
 
 /**
  *
- * @property KickstartCommand $KickstartCommand
+ * @property KickstartCommandTask $KickstartCommand
  */
 class KickstartShell extends Shell {
 
     public $uses = array();
-    public $tasks = array('KickstartCommand');
+    public $tasks = array('Kickstart.KickstartCommand');
     public $steps = array();
     protected $_loaded = array();
     protected $_pwd = '';

@@ -102,11 +102,11 @@ class KickstartCommandTask extends Shell {
             return;
         }
 
-        if (!preg_match('/ -app .+/', $command)) {
+        if (!preg_match('/ -app .+/', $command) && isset($this->params['app'])) {
             $command .= ' -app ' . $this->params['app'];
         }
 
-        $this->_exec('php ' . CAKE . 'console/cake.php bake ' . $command);
+        $this->_exec('php ' . APP . 'Console/cake.php bake ' . $command);
     }
 
     /**

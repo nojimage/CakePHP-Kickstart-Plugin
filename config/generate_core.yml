@@ -2,8 +2,8 @@
 # generate core.php
 ##
 generatefile:
-  template: config/core.php
-  target:   $APP/config/core.php
+  template: Config/core.php
+  target:   $APP/Config/core.php
   # vars
   vars:
     timezone: Asia/Tokyo       # date_default_timezone_set

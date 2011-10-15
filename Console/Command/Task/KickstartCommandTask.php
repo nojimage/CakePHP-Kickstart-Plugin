@@ -207,7 +207,7 @@ class KickstartCommandTask extends Shell {
         $this->interactive = $_interactive;
 
         // setup template path
-        $this->Template->templatePaths = array(dirname(dirname(__FILE__)) . DS . 'templates' . DS);
+        $this->Template->templatePaths = array(dirname(dirname(dirname(__FILE__))) . DS . 'Templates' . DS);
         // generate file
         $this->createFile(ROOT . DS . $params['target'], $this->Template->generate('generatefiles', $params['template'], $vars));
     }

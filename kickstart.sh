@@ -1,16 +1,16 @@
 #!/bin/bash
 
 ##
-# CakePHP kickstart script
+# CakePHP2.0 kickstart script
 #
 # usage:
-#   kickstart.sh <PROJECT_NAME>
+#   kickstart2.sh <PROJECT_NAME>
 ##
 set -o nounset
 set -o errexit
 
 CAKEPHP_URL="https://github.com/cakephp/cakephp.git"
-CAKEPHP_BRANCH=master
+CAKEPHP_BRANCH=2.0
 KICKSTART_PLUGIN_URL="https://github.com/nojimage/CakePHP-Kickstart-Plugin.git"
 
 # get options
@@ -58,7 +58,7 @@ function fetch_cake {
     git remote add origin ${CAKEPHP_URL}
     git pull origin ${CAKEPHP_BRANCH}
     echo ""
-    cat cake/VERSION.txt
+    cat lib/Cake/VERSION.txt
     echo ""
 }
 
@@ -69,7 +69,7 @@ case $COMMAND in
             echo "${PROJECT_DIR} already exists."
             exit 1
         fi
-        echo "Setup CakePHP"
+        echo "Setup CakePHP 2.0"
         # fetch cakephp from git
 		fetch_cake
 		cp -r $TMP_DIR ${PROJECT_DIR}
@@ -78,15 +78,21 @@ case $COMMAND in
         # create git repo
         rm -rf .git
         git init
-        git add . ; git add -f app/tmp; git add -f  app/config;
+        git add . ; git add -f app/tmp; git add -f  app/Config;
         git commit -m 'first commit'
-        # add kickstart plugin
-        git submodule add -f ${KICKSTART_PLUGIN_URL} plugins/kickstart
+        echo ""
+        echo "CakePHP initialization successs."
+        ## add kickstart plugin
+        git submodule add -f -b 2.0 ${KICKSTART_PLUGIN_URL} plugins/Kickstart
+        echo "" >> app/Config/bootstrap.php
+        echo "CakePlugin::load('Kickstart'); // load Kickstart Plugin" >> app/Config/bootstrap.php
+        echo "" >> app/Config/bootstrap.php
+        git au app/Config/bootstrap.php
         git commit -m 'add Kickstart Plugin'
         echo ""
-        echo "CakePHP initialization successs. Next run:"
+        echo "Next run:"
         echo ""
-        echo " cd ${PROJECT}; cake/console/cake kickstart"
+        echo " cd ${PROJECT}; app/Console/cake Kickstart.kickstart"
         echo ""
 		;;
 
@@ -94,8 +100,8 @@ case $COMMAND in
 		echo ""
 		echo "Update CakePHP core"
 		fetch_cake
-		rm -rf ${PROJECT_DIR}/cake
-		cp -r $TMP_DIR/cake ${PROJECT_DIR}/cake
+		rm -rf ${PROJECT_DIR}/lib/Cake
+		cp -r $TMP_DIR/lib/Cake ${PROJECT_DIR}/lib/Cake
 		rm -rf $TMP_DIR
 		cd ${PROJECT_DIR}
 		;;
@@ -105,6 +111,6 @@ case $COMMAND in
         print_usage
 		exit 1
 		;;
-esac
+esac;
 
 exit 0

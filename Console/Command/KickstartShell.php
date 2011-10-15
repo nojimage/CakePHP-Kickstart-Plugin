@@ -143,33 +143,10 @@ class KickstartShell extends Shell {
      * @param string $config
      */
     protected function _loadSteps($fileName) {
-        $plugin = $pluginPath = $found = false;
-        list($plugin, $fileName) = pluginSplit($fileName);
 
-        if (!empty($plugin)) {
-            $pluginPath = App::pluginPath($plugin);
-        } else {
-            $pluginPath = App::pluginPath('Kickstart');
-        }
-        $pos = strpos($fileName, '..');
+        $fileName = $this->_getConfigFileName($fileName);
 
-        if ($pos === false) {
-            if (!empty($plugin) && !empty($pluginPath) && file_exists($pluginPath . 'Config' . DS . $fileName . '.yml')) {
-                $fileName = $pluginPath . 'Config' . DS . $fileName . '.yml';
-                $found = true;
-            } elseif (file_exists(APP . 'Config' . DS . $fileName . '.yml')) {
-                $fileName = APP . 'Config' . DS . $fileName . '.yml';
-                $found = true;
-            } elseif (!empty($pluginPath) && file_exists($pluginPath . 'Config' . DS . $fileName . '.yml')) {
-                $fileName = $pluginPath . 'Config' . DS . $fileName . '.yml';
-                $found = true;
-            } elseif (file_exists(ROOT . $fileName . '.yml')) {
-                $fileName = ROOT . $fileName . '.yml';
-                $found = true;
-            }
-        }
-
-        if (!$found || in_array($fileName, $this->_loaded)) {
+        if (empty($fileName) || in_array($fileName, $this->_loaded)) {
             return false;
         }
 
@@ -189,6 +166,50 @@ class KickstartShell extends Shell {
                 $this->steps[] = array($key => $val);
             }
         }
+    }
+
+    /**
+     * 
+     * @property string $fileName
+     * @return string filename 
+     */
+    protected function _getConfigFileName($fileName) {
+
+        $plugin = $pluginPath = $found = false;
+        list($plugin, $fileName) = pluginSplit($fileName);
+
+        if (!empty($plugin)) {
+            $pluginPath = App::pluginPath($plugin);
+        } else {
+            $pluginPath = App::pluginPath('Kickstart');
+        }
+        $pos = strpos($fileName, '..');
+
+        if ($pos === false) {
+            if (!empty($plugin) && !empty($pluginPath) && file_exists($pluginPath . 'Config' . DS . $fileName . '.yml')) {
+                $fileName = $pluginPath . 'Config' . DS . $fileName . '.yml';
+                $found = true;
+            } elseif (file_exists($this->_getConfigPath() . $fileName . '.yml')) {
+                $fileName = $this->_getConfigPath() . $fileName . '.yml';
+                $found = true;
+            } elseif (!empty($pluginPath) && file_exists($pluginPath . 'Config' . DS . $fileName . '.yml')) {
+                $fileName = $pluginPath . 'Config' . DS . $fileName . '.yml';
+                $found = true;
+            } elseif (file_exists(ROOT . $fileName . '.yml')) {
+                $fileName = ROOT . $fileName . '.yml';
+                $found = true;
+            }
+        }
+
+        return $found ? $fileName : null;
+    }
+
+    /**
+     *
+     * @return string
+     */
+    protected function _getConfigPath() {
+        return APP . 'Config' . DS;
     }
 
 }

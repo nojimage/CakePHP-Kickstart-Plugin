@@ -7,7 +7,8 @@
     target: vendors
 
 # install DebugKit
-- git_submodule:
+- plugin:
+    name: DebugKit
     repo: -f https://github.com/cakephp/debug_kit.git
     target: plugins/debug_kit
 
@@ -15,7 +16,8 @@
 ## (using application skelton sample)
 ##
 ## install CakePHP skel
-- git_submodule:
+- plugin:
+    name: Skel
     repo: -f http://github.com/nojimage/CakePHP-skel.git
     target: plugins/skel
 

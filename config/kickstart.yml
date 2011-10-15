@@ -3,25 +3,23 @@
 ##
 
 # install DebugKit
-- git_submodule:
+- plugin:
+    name: DebugKit
     repo: -f -b 2.0 https://github.com/cakephp/debug_kit.git
     target: plugins/DebugKit
-- exec:
-    - echo ""  >> {$APP}/Config/bootstrap.php
-    - echo "CakePlugin::load('DebugKit');" >> {$APP}/Config/bootstrap.php
-    - echo ""  >> {$APP}/Config/bootstrap.php
 
 ##
 ## (using application skelton sample)
 ##
 ## install CakePHP skel
-#- git_submodule:
-#    repo: -f http://github.com/nojimage/CakePHP-skel.git
-#    target: plugins/skel
+#- plugin:
+#    name: plugins/Skel
+#    repo: -f -b 2.0 http://github.com/nojimage/CakePHP-skel.git
+#    target: plugins/Skel
 
 ## bake new project
 #- exec: rm -r {$APP_DIR}
-#- bake: project {$APP_DIR} -app . -skel plugins/skel/basic
+#- bake: project {$APP_DIR} -app . -skel plugins/Skel/basic
 
 # set writable APP/tmp
 - exec:

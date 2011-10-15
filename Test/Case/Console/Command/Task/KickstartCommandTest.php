@@ -78,12 +78,12 @@ class KickstartCommondTaskTestCase extends CakeTestCase {
     // =========================================================================
 
     public function testBake() {
-        $this->Task->expects($this->once())->method('_exec')->with('php ' . CAKE . 'console/cake.php bake db_config -app ' . $this->Task->params['app']);
+        $this->Task->expects($this->once())->method('_exec')->with('php ' . APP . 'Console/cake.php bake db_config -app ' . $this->Task->params['app']);
         $this->Task->bake('db_config');
     }
 
     public function testBake_with_app_params_override() {
-        $this->Task->expects($this->once())->method('_exec')->with('php ' . CAKE . 'console/cake.php bake db_config -app foobar');
+        $this->Task->expects($this->once())->method('_exec')->with('php ' . APP . 'Console/cake.php bake db_config -app foobar');
         $this->Task->bake('db_config -app foobar');
     }
 

@@ -113,6 +113,7 @@ class KickstartCommandTask extends Shell {
      * get simpletest files
      *
      * @param mixed $params
+     * @deprecated
      */
     public function get_simpletest($params) {
 
@@ -167,6 +168,20 @@ class KickstartCommandTask extends Shell {
     }
 
     /**
+     * setup plugin
+     *
+     * @param mixed $params
+     */
+    public function plugin($params) {
+        if (!isset($params['repo']) || !isset($params['target'])) {
+            $this->err(__d('kickstart', "'plugin' need 'name', 'target', and 'repo' options."));
+            return;
+        }
+        $this->git_submodule($params);
+        $this->_writeToBootstrap("\nCakePlugin::load('{$params['name']}');\n");
+    }
+
+    /**
      * generate file from template
      *
      * @param array $params
@@ -210,6 +225,26 @@ class KickstartCommandTask extends Shell {
         $this->Template->templatePaths = array(dirname(dirname(dirname(__FILE__))) . DS . 'Templates' . DS);
         // generate file
         $this->createFile(ROOT . DS . $params['target'], $this->Template->generate('generatefiles', $params['template'], $vars));
+    }
+
+    /**
+     * write to bootstrap.php
+     *
+     * @param string $string
+     * @return bool
+     */
+    protected function _writeToBootstrap($string) {
+        $filename = $this->getConfigPath() . 'bootstrap.php';
+        $content = file_get_contents($filename);
+        return file_put_contents($filename, $content . $string);
+    }
+
+    /**
+     *
+     * @return string
+     */
+    public function getConfigPath() {
+        return APP . 'Config' . DS;
     }
 
 }

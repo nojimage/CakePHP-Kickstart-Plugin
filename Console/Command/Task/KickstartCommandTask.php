@@ -3,7 +3,7 @@
 /**
  * Kickstart command base class
  *
- * CakePHP 1.3
+ * CakePHP 2.0
  * PHP versions 5
  *
  * Copyright 2011, nojimage (http://php-tips.com/)
@@ -12,7 +12,7 @@
  * Redistributions of files must retain the above copyright notice.
  *
  * @filesource
- * @version   1.0
+ * @version   2.0
  * @author    nojimage <nojimage at gmail.com>
  * @copyright 2011 nojimage (http://php-tips.com/)
  * @license   http://www.opensource.org/licenses/mit-license.php The MIT License

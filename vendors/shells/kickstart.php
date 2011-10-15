@@ -143,6 +143,38 @@ class KickstartShell extends Shell {
      * @param string $config
      */
     protected function _loadSteps($fileName) {
+
+        $fileName = $this->_getConfigFileName($fileName);
+
+        if (empty($fileName) || in_array($fileName, $this->_loaded)) {
+            return false;
+        }
+
+        $this->_loaded[] = $fileName;
+
+        $_steps = Spyc::YAMLLoad($fileName);
+        foreach ($_steps as $key => $val) {
+            if (strtolower($key) === 'include') {
+                // include another file
+                if (!is_array($val)) {
+                    $val = array($val);
+                }
+                array_walk($val, array($this, '_loadSteps'));
+            } else if (is_int($key)) {
+                $this->steps[] = $val;
+            } else {
+                $this->steps[] = array($key => $val);
+            }
+        }
+    }
+
+    /**
+     * 
+     * @property string $fileName
+     * @return string filename 
+     */
+    protected function _getConfigFileName($fileName) {
+
         $plugin = $pluginPath = $found = false;
         list($plugin, $fileName) = pluginSplit($fileName);
 
@@ -169,26 +201,7 @@ class KickstartShell extends Shell {
             }
         }
 
-        if (!$found || in_array($fileName, $this->_loaded)) {
-            return false;
-        }
-
-        $this->_loaded[] = $fileName;
-
-        $_steps = Spyc::YAMLLoad($fileName);
-        foreach ($_steps as $key => $val) {
-            if (strtolower($key) === 'include') {
-                // include another file
-                if (!is_array($val)) {
-                    $val = array($val);
-                }
-                array_walk($val, array($this, '_loadSteps'));
-            } else if (is_int($key)) {
-                $this->steps[] = $val;
-            } else {
-                $this->steps[] = array($key => $val);
-            }
-        }
+        return $found ? $fileName : null;
     }
 
     /**

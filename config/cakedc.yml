@@ -6,7 +6,7 @@
 # install Utils
 - plugin:
     name: Utils
-    repo: -f https://github.com/CakeDC/utilss.git
+    repo: -f https://github.com/CakeDC/utils.git
     target: plugins/utils
 
 # install Search

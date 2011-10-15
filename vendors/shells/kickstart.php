@@ -157,8 +157,8 @@ class KickstartShell extends Shell {
             if (!empty($plugin) && !empty($pluginPath) && file_exists($pluginPath . 'config' . DS . $fileName . '.yml')) {
                 $fileName = $pluginPath . 'config' . DS . $fileName . '.yml';
                 $found = true;
-            } elseif (file_exists(CONFIGS . $fileName . '.yml')) {
-                $fileName = CONFIGS . $fileName . '.yml';
+            } elseif (file_exists($this->_getConfigPath() . $fileName . '.yml')) {
+                $fileName = $this->_getConfigPath() . $fileName . '.yml';
                 $found = true;
             } elseif (!empty($pluginPath) && file_exists($pluginPath . 'config' . DS . $fileName . '.yml')) {
                 $fileName = $pluginPath . 'config' . DS . $fileName . '.yml';
@@ -189,6 +189,14 @@ class KickstartShell extends Shell {
                 $this->steps[] = array($key => $val);
             }
         }
+    }
+
+    /**
+     *
+     * @return string
+     */
+    protected function _getConfigPath() {
+        return CONFIGS;
     }
 
 }

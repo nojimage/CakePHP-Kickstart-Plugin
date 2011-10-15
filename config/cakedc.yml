@@ -1,0 +1,82 @@
+##
+# install CakeDC Plugins
+# http://cakedc.github.com/
+##
+
+# install Utils
+- plugin:
+    name: Utils
+    repo: -f https://github.com/CakeDC/utilss.git
+    target: plugins/utils
+
+# install Search
+- plugin:
+    name: Search
+    repo: -f https://github.com/CakeDC/search.git
+    target: plugins/search
+
+# install Migrations
+- plugin:
+    name: Migrations
+    repo: -f https://github.com/CakeDC/migrations.git
+    target: plugins/migrations
+
+# install Users
+- plugin:
+    name: Users
+    repo: -f https://github.com/CakeDC/users.git
+    target: plugins/users
+
+# install Categories
+- plugin:
+    name: Categories
+    repo: -f https://github.com/CakeDC/categories.git
+    target: plugins/categories
+
+# install Recaptcha
+- plugin:
+    name: Recaptcha
+    repo: -f https://github.com/CakeDC/recaptcha.git
+    target: plugins/recaptcha
+
+# install Tags
+- plugin:
+    name: Tags
+    repo: -f https://github.com/CakeDC/tags.git
+    target: plugins/tags
+
+# install Comments
+- plugin:
+    name: Comments
+    repo: -f https://github.com/CakeDC/comments.git
+    target: plugins/comments
+
+# install Templates
+- plugin:
+    name: Templates
+    repo: -f https://github.com/CakeDC/templates.git
+    target: plugins/templates
+
+# install Favorites
+- plugin:
+    name: Favorites
+    repo: -f https://github.com/CakeDC/favorites.git
+    target: plugins/favorites
+
+# install Ratings
+- plugin:
+    name: Ratings
+    repo: -f https://github.com/CakeDC/ratings.git
+    target: plugins/ratings
+
+# install Problems
+- plugin:
+    name: Problems
+    repo: -f https://github.com/CakeDC/problems.git
+    target: plugins/problems
+
+# install TinyMCE
+- plugin:
+    name: TinyMCE
+    repo: -f https://github.com/CakeDC/TinyMCE.git
+    target: plugins/tiny_mce

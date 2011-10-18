@@ -10,7 +10,7 @@ set -o nounset
 set -o errexit
 
 CAKEPHP_URL="https://github.com/cakephp/cakephp.git"
-CAKEPHP_BRANCH=2.0
+CAKEPHP_BRANCH=master
 KICKSTART_PLUGIN_URL="https://github.com/nojimage/CakePHP-Kickstart-Plugin.git"
 
 # get options

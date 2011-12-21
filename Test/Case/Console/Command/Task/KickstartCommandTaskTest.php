@@ -122,7 +122,7 @@ class KickstartCommondTaskTestCase extends CakeTestCase {
                 ->will($this->returnCallback(array($this, 'returnInValue')));
 
         $this->Task->Template->expects($this->at(0))->method('generate')
-                ->with('generatefiles', 'config/core.php', array(
+                ->with('generatefiles', 'Config/core.php', array(
                     'arg1' => 'value1',
                     'arg2' => 'value2',
                     'arg3' => 'value3',
@@ -130,10 +130,10 @@ class KickstartCommondTaskTestCase extends CakeTestCase {
                 ->will($this->returnValue('template result'));
 
         $this->Task->expects($this->once())->method('createFile')
-                ->with(APP . 'config/core.php', 'template result');
+                ->with(APP . 'Config/core.php', 'template result');
         $this->Task->generatefile(array(
-            'template' => 'config/core.php',
-            'target' => '$APP/config/core.php',
+            'template' => 'Config/core.php',
+            'target' => '$APP/Config/core.php',
             'vars' => array(
                 'arg1' => 'value1',
             ),

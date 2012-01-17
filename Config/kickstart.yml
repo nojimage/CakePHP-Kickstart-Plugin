@@ -5,7 +5,7 @@
 # install DebugKit
 - plugin:
     name: DebugKit
-    repo: -f -b 2.0 https://github.com/cakephp/debug_kit.git
+    repo: -f https://github.com/cakephp/debug_kit.git
     target: plugins/DebugKit
 
 ##

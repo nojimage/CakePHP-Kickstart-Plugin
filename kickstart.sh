@@ -100,6 +100,9 @@ case $COMMAND in
 		echo ""
 		echo "Update CakePHP core"
 		fetch_cake
+        if [ ! -d ${PROJECT_DIR}/lib/Cake ] ; then
+            mkdir -p ${PROJECT_DIR}/lib/Cake
+        fi
 		rm -rf ${PROJECT_DIR}/lib/Cake
 		cp -r $TMP_DIR/lib/Cake ${PROJECT_DIR}/lib/Cake
 		rm -rf $TMP_DIR

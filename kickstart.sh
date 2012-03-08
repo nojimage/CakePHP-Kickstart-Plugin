@@ -1,10 +1,10 @@
 #!/bin/bash
 
 ##
-# CakePHP2.0 kickstart script
+# CakePHP2.1 kickstart script
 #
 # usage:
-#   kickstart2.sh <PROJECT_NAME>
+#   kickstart.sh <PROJECT_NAME>
 ##
 set -o nounset
 set -o errexit
@@ -69,7 +69,7 @@ case $COMMAND in
             echo "${PROJECT_DIR} already exists."
             exit 1
         fi
-        echo "Setup CakePHP 2.0"
+        echo "Setup CakePHP 2.1"
         # fetch cakephp from git
 		fetch_cake
 		cp -r $TMP_DIR ${PROJECT_DIR}

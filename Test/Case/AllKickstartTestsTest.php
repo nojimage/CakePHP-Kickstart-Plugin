@@ -3,10 +3,10 @@
 /**
  * run all tests
  */
-class AllTest extends PHPUnit_Framework_TestSuite {
+class AllKickstartTestsTest extends PHPUnit_Framework_TestSuite {
 
 	public static function suite() {
-		$suite = new CakeTestSuite('All tests');
+		$suite = new CakeTestSuite('All Kickstart plugin tests');
 		$suite->addTestDirectoryRecursive(dirname(__FILE__));
 		return $suite;
 	}

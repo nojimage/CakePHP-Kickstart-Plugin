@@ -24,7 +24,7 @@ done
 # help print
 function print_usage {
 	echo ""
-	echo "$0 [-b <cakephp_branch>] <project_name> <command>"
+	echo "$0 [-b <cakephp_branch>] <command> <project_name>"
 	echo ""
 	echo "Available commands are:"
 	echo " - init (fetch CakePHP from git. and install kickstart plugin.)"
@@ -37,8 +37,8 @@ if [ $# != 2 ]; then
 fi
 
 # Vars
-PROJECT=$1
-COMMAND=$2
+COMMAND=$1
+PROJECT=$2
 PROJECT_DIR=$(pwd)/${PROJECT}
 TMP_DIR=/tmp/cakeproject/${PROJECT}
 

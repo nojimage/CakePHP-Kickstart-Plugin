@@ -70,9 +70,14 @@ cp kickstart.sh {YOUR_WORKSPACE}
 h3. Usage
 
 <pre>
-./kickstart.sh someproject_name init
+./kickstart.sh init someproject_name
 </pre>
 
+or
+
+<pre>
+./kickstart.sh cakeupdate someproject_name
+</pre>
 
 h2. LISENCE
 

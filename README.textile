@@ -1,6 +1,6 @@
 h1. CakePHP Kickstart plugin
 
-PHP 5.2+, CakePHP 1.3+
+PHP 5.2+, CakePHP 2.0+
 
 This plugin provides Kickstart shell command.
 
@@ -70,9 +70,14 @@ cp kickstart.sh {YOUR_WORKSPACE}
 h3. Usage
 
 <pre>
-./kickstart.sh someproject_name init
+./kickstart.sh init someproject_name
 </pre>
 
+or
+
+<pre>
+./kickstart.sh cakeupdate someproject_name
+</pre>
 
 h2. LISENCE
 

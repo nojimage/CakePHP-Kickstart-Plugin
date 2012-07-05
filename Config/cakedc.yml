@@ -6,19 +6,19 @@
 # install Utils
 - plugin:
     name: Utils
-    repo: -f -b 2.0 https://github.com/CakeDC/utils.git
+    repo: -f https://github.com/CakeDC/utils.git
     target: plugins/Utils
 
 # install Search
 - plugin:
     name: Search
-    repo: -f -b 2.0 https://github.com/CakeDC/search.git
+    repo: -f https://github.com/CakeDC/search.git
     target: plugins/Search
 
 # install Migrations
 - plugin:
     name: Migrations
-    repo: -f -b 2.0 https://github.com/CakeDC/migrations.git
+    repo: -f https://github.com/CakeDC/migrations.git
     target: plugins/Migrations
 
 # install Users
@@ -72,5 +72,5 @@
 # install Problems
 - plugin:
     name: Problems
-    repo: -f -b 2.0 https://github.com/CakeDC/problems.git
+    repo: -f https://github.com/CakeDC/problems.git
     target: plugins/Problems
